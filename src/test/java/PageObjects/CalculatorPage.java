@@ -5,6 +5,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
+import org.sikuli.script.FindFailed;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 import ru.yandex.qatools.ashot.comparison.PointsMarkupPolicy;
@@ -17,14 +18,14 @@ import java.io.IOException;
 
 public class CalculatorPage extends BasePage {
     private WebElement calculatorCanvas;
-    public CalculatorPage (WebDriver browser)
-    {
+    private String resourcesPath = "src/main/resources/";
+
+    public CalculatorPage (WebDriver browser) {
         super (browser);
         PageFactory.initElements(browser, this);
         WebElement iframe = browser.findElement(By.id("fullframe"));
         browser.switchTo().frame(iframe);
         calculatorCanvas = browser.findElement(By.id("canvas"));
-
     }
 
     public Actions moveToNumber9(){
@@ -47,13 +48,19 @@ public class CalculatorPage extends BasePage {
                 400);
     }
 
+    public void moveToAndClickNumber(String number) throws FindFailed {
+        moveToAndClick(number);
+    }
+
     public Actions moveToCE(){
         return moveTo(calculatorCanvas, calculatorCanvas.getLocation().getX()/2  + 100, 150);
     }
+
     public Actions moveToSubtractSign(){
         return moveTo(calculatorCanvas, calculatorCanvas.getLocation().getX()/2,
                 350);
     }
+
     public Actions moveToDivisionSign(){
         return moveTo(calculatorCanvas, calculatorCanvas.getLocation().getX()/2,
                 200);
@@ -84,12 +91,11 @@ public class CalculatorPage extends BasePage {
 
         ImageIO.write(canvasCalcuatorActualImg, "png", take);
 
-        File expectedFileImage = new File("src/main/resources/"+ fileName);
+        File expectedFileImage = new File(resourcesPath+ fileName);
 
         BufferedImage expectedImage = ImageIO.read(expectedFileImage);
         return compareTowImages(expectedImage, canvasCalcuatorActualImg);
     }
-
 
     private boolean compareTowImages(BufferedImage expectedImage, BufferedImage actualImage) {
         ImageDiffer imageDiffer = new ImageDiffer();

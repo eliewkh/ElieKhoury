@@ -25,3 +25,16 @@ Feature: Divisions
     And I click on the number nine
     And Click the equal sign
     Then Compare the actual screenshot to the expected "Div03" div screenshot
+
+  @Div.04
+  Scenario Outline: General function to test calculator in one scenario
+    When The user enters the "<First Value>"
+    And choose the "<Operation>"
+    And enters the "<Second Value>"
+    And click on the equal sign
+    Then compare results with "<Expected Image Result>"
+
+    Examples:
+      | Operation         | First Value | Second Value | Expected Image Result |
+      | divisionOperator  | 9           | 0            |  Div01                |
+      | divisionOperator  | 9           | 9            |  Div02                |
